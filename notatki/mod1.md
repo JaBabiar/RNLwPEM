@@ -1,11 +1,10 @@
-#fizyka #elektromagnetyzm #notatka
-
 # Moduł I: Podstawy Pól Elektrycznego i Magnetycznego
 
-## 1. Pole Elektryczne ($E$)
+## 1. Pole Elektryczne (E)
 
 ### Definicja i źródła
-> [!INFO] Definicja
+
+> [!NOTE]
 > **Pole elektryczne** jest stanem przestrzeni, w której na obiekt fizyczny mający ładunek elektryczny działają siły o naturze elektromagnetycznej. Jest to składowa pola elektromagnetycznego.
 
 1.  **Źródło**: Źródłem pola elektrycznego są **ładunki elektryczne**.
@@ -16,22 +15,24 @@
 ### Wektor natężenia pola ($E$)
 Natężenie pola elektrycznego ($E$) definiowane jest jako siła ($F$) działająca na dodatni ładunek próbny ($q_0$) umieszczony w danym punkcie:
 
-$$E = \frac{F}{q_0}$$
+$$
+E = \frac{F}{q_0}
+$$
 
 Wartość natężenia pola w punkcie oddalonym o $r$ od ładunku punktowego ($q$) określa **Prawo Coulomba**:
 
-$$E = \frac{1}{4\pi\epsilon_0} \cdot \frac{|q|}{r^2}$$
+$$
+E = \frac{1}{4\pi\epsilon_0} \cdot \frac{|q|}{r^2}
+$$
 
 ### Linie Pola
 * **Kierunek**: Wektor natężenia pola w dowolnym punkcie jest styczny do linii pola.
 * **Zwrot**: Przyjmuje się, że linie pola biorą początek w **ładunkach dodatnich**, a kończą w **ładunkach ujemnych** (lub w nieskończoności).
 * **Ładunek próbny**: Do określenia kierunku zawsze używa się ładunku *dodatniego*.
 
-
-
 ---
 
-## 2. Pole Magnetyczne ($B$)
+## 2. Pole Magnetyczne (B)
 
 ### Definicja i Źródła
 1.  **Źródła**:
@@ -49,14 +50,12 @@ W przeciwieństwie do pola elektrycznego:
 * Linie są **ciągłe i tworzą zamknięte pętle** (pole jest bezźródłowe – brak "ładunków magnetycznych").
 * Zorientowane od bieguna północnego (**N**) do południowego (**S**) na zewnątrz magnesu.
 
-
-
 ---
 
 ## 3. Pole Elektromagnetyczne (PEM)
 
-> [!ABSTRACT] Układ dwóch pól
-> Pole elektromagnetyczne to układ wzajemnie powiązanych pól: **elektrycznego ($E$)** i **magnetycznego ($B$)**. Ich postrzeganie zależy od układu odniesienia obserwatora.
+> [!IMPORTANT]
+> **Pole elektromagnetyczne** to układ wzajemnie powiązanych pól: **elektrycznego ($E$)** i **magnetycznego ($B$)**. Ich postrzeganie zależy od układu odniesienia obserwatora.
 
 ### Powiązanie Pól (Równania Maxwella)
 Relacja jest wzajemna:
@@ -66,7 +65,9 @@ Relacja jest wzajemna:
 ### Siła Lorentza
 Całkowita siła działająca na ładunek ($q$) poruszający się z prędkością ($v$) w polu elektromagnetycznym. Jest sumą siły elektrycznej i magnetycznej:
 
-$$F = q(E + v \times B)$$
+$$
+F = q(E + v \times B)
+$$
 
 | Rodzaj siły | Wzór | Właściwości |
 | :--- | :--- | :--- |
