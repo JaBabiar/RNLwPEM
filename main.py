@@ -2,60 +2,27 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.integrate import solve_ivp
 
-
-# --- KONFIGURACJA PÓL ---
-def pole_elektryczne(t, r):
-    """Zwraca wektor pola E [Ex, Ey, Ez] w danej pozycji r i czasie t."""
-    # Przykład: stałe pole elektryczne skierowane w górę osi Z
-    # E = 0,1 * k
-    return np.array([1.0, 0.0, 0.1])
-
-
-def pole_magnetyczne(t, r):
-    """Zwraca wektor pola B [Bx, By, Bz] w danej pozycji r i czasie t."""
-    # Przykład: stałe pole magnetyczne wzdłuż osi Z
-    # B = 1.0 * k
-    return np.array([0.0, 1.0, 1.0])
+#Lamus:
+"""<"""
+    # def pole_elektryczne(t, r):
+#     """Zwraca wektor pola E [Ex, Ey, Ez] w danej pozycji r i czasie t."""
+#     # Przykład: stałe pole elektryczne skierowane w górę osi Z
+#     # E = 0,1 * k
+#     return np.array([1.0, 0.0, 0.1])
 
 
-# --- FIZYKA (SIŁA LORENTZA) ---
-def rownanie_ruchu(t, y, q, m):
-    """
-    Funkcja definiująca układ równań różniczkowych.
-    y to wektor stanu: [x, y, z, vx, vy, vz]
-    """
-    # Rozpakowanie pozycji (r) i prędkości (v)
-    r = y[:3]
-    v = y[3:]
-
-    # Pobranie wartości pól w danym punkcie
-    E = pole_elektryczne(t, r)
-    B = pole_magnetyczne(t, r)
-
-    # Obliczenie siły Lorentza: F = q(E + v x B)
-    # np.cross to iloczyn wektorowy
-    F = q * (E + np.cross(v, B))
-
-    # Przyspieszenie a = F / m
-    a = F / m
-
-    # Zwracamy pochodne: [dr/dt, dv/dt] czyli [v, a]
-    dydt = np.concatenate((v, a))
-    return dydt
 
 
-# --- PARAMETRY SYMULACJI ---
-# Jednostki umowne (dla elektronu w realnych jednostkach liczby byłyby bardzo małe)
-q = 1.0  # Ładunek
-m = 1.0  # Masa
-t_span = (0, 30)  # Czas symulacji od 0 do 20 sekund
-t_eval = np.linspace(t_span[0], t_span[1], 1000)  # Punkty czasowe do zapisu
 
-# Warunki początkowe: [x, y, z, vx, vy, vz]
-# Cząstka startuje w (0,0,0) z prędkością w kierunku X
-y0 = np.array([0.0, 0.0, 0.0, 1.0, 0.5, 0.0])
+# def pole_magnetyczne(t, r):
+#     """Zwraca wektor pola B [Bx, By, Bz] w danej pozycji r i czasie t."""
+#     # Przykład: stałe pole magnetyczne wzdłuż osi Z
+#     # B = 1.0 * k
+    
+#     return np.array([0.0, 1.0, 1.0])
 
 # --- ROZWIĄZANIE RÓWNANIA ---
+"""
 sol = solve_ivp(
     fun=lambda t, y: rownanie_ruchu(t, y, q, m),
     t_span=t_span,
@@ -63,13 +30,97 @@ sol = solve_ivp(
     t_eval=t_eval,
     method='RK45'  # Metoda Runge-Kutta rzędu 4/5 (standardowa)
 )
+"""
+
+"""x, y, z = sol.y[0], sol.y[1], sol.y[2]"""
+
+""">"""
+
+# metoda Eulera Cromera (działa ciut lepiej niż zwykły euler)
+def solver(position, velocity,  mass, charge , evaluation_points):
+    #implementacja algorytmu podobnego do algorytmu verlet'a
+    position_memeory = [[position[0]],[position[1]],[position[2]]]
+    t = evaluation_points[1] - evaluation_points[0]
+    
+    acceletarion = rownanie_ruchu(velocity, charge, mass)[3:6]
+
+    for iterator in range(1, len(evaluation_points)):
+        
+        velocity[0] +=  acceletarion[0]*t
+        velocity[1] +=  acceletarion[1]*t
+        velocity[2] +=  acceletarion[2]*t
+        
+        zmianawX = position_memeory[0][iterator-1] + velocity[0]*t + (acceletarion[0])*t**2
+        zmianawY = position_memeory[1][iterator-1] + velocity[1]*t + (acceletarion[1])*t**2
+        zmianawZ = position_memeory[2][iterator-1] + velocity[2]*t + (acceletarion[2])*t**2
+        
+        position_memeory[0].append(zmianawX)
+        position_memeory[1].append(zmianawY)
+        position_memeory[2].append(zmianawZ)
+        
+        acceletarion = rownanie_ruchu(velocity, charge, mass)[3:6]
+        
+    return position_memeory
+    
+    
+
+
+# --- KONFIGURACJA PÓL ---
+# pole w naszym problemie jest stałe w przestrzeni i czasie
+
+print("|-- Konfiguracja pól --|")
+print("podaj wektor opisujący pole elektryczne E (3 wartości oddzielone spacją): ")
+E = np.array(input().split()).astype(float)
+print("podaj wektor opisujący pole magnetyczne B (3 wartości oddzielone spacją): ")
+B = np.array(input().split()).astype(float)
+
+
+
+
+# --- FIZYKA (SIŁA LORENTZA) ---
+def rownanie_ruchu(velocity, charge, mass):
+    """
+    Funkcja definiująca układ równań różniczkowych.
+    y to wektor stanu: [x, y, z, vx, vy, vz]
+    """
+    # Rozpakowanie pozycji i prędkości 
+    # Pobranie wartości pól w danym punkcie
+    # Obliczenie siły F = q(E + v x B)
+    # np.cross to iloczyn wektorowy
+    F = charge* (E + np.cross(velocity, B))
+
+    # Przyspieszenie a = F / m
+    acceleration = F / mass
+
+    # Zwracamy pochodne: [dr/dt, dv/dt] czyli [v, a]
+    dydt = np.concatenate((velocity, acceleration))
+    return dydt
+
+
+# --- PARAMETRY SYMULACJI ---
+# Jednostki umowne (dla elektronu w realnych jednostkach liczby byłyby bardzo małe)
+print("|-- Parametry cząstki --|")
+q = float(input("Podaj wartość ładunku cząstki: "))  # Ładunek
+m = float(input("Podaj wartość masy cząstki: "))  # Masa
+pos = np.array(input("Podaj początkową pozycję cząstki (3 wartości oddzielone spacją): ").split()).astype(float)  # Pozycja początkowa
+vel = np.array(input("Podaj początkową prędkość cząstki (3 wartości oddzielone spacją): ").split()).astype(float)  # Prędkość początkowaW
+
+t_span = (0, 30)  # Czas symulacji od 0 do 20 sekund
+t_eval = np.linspace(t_span[0], t_span[1], 1000)  # Punkty czasowe do zapisu
+
+
+# --- ROZWIĄZANIE RÓWNANIA RUCHU ---
+sol = solver(position=pos, velocity=vel, mass=m, charge=q , evaluation_points=t_eval)
 
 # --- WIZUALIZACJA ---
 fig = plt.figure(figsize=(10, 8))
 ax = fig.add_subplot(111, projection='3d')
 
 # Wyciągnięcie współrzędnych z rozwiązania
-x, y, z = sol.y[0], sol.y[1], sol.y[2]
+
+
+x,y,z = sol[0], sol[1], sol[2]
+
 
 ax.plot(x, y, z, label='Tor ruchu cząsteczki', color='b')
 ax.scatter(x[0], y[0], z[0], color='g', label='Start')  # Punkt startowy
