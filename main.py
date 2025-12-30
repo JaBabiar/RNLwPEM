@@ -50,9 +50,9 @@ def solver(position, velocity,  mass, charge , evaluation_points):
         velocity[1] +=  acceletarion[1]*t
         velocity[2] +=  acceletarion[2]*t
         
-        zmianawX = position_memeory[0][iterator-1] + velocity[0]*t + (acceletarion[0])*t**2
-        zmianawY = position_memeory[1][iterator-1] + velocity[1]*t + (acceletarion[1])*t**2
-        zmianawZ = position_memeory[2][iterator-1] + velocity[2]*t + (acceletarion[2])*t**2
+        zmianawX = position_memeory[0][iterator-1] + velocity[0]*t + 0.5*(acceletarion[0])*t**2
+        zmianawY = position_memeory[1][iterator-1] + velocity[1]*t + 0.5*(acceletarion[1])*t**2
+        zmianawZ = position_memeory[2][iterator-1] + velocity[2]*t + 0.5*(acceletarion[2])*t**2
         
         position_memeory[0].append(zmianawX)
         position_memeory[1].append(zmianawY)
@@ -105,8 +105,8 @@ m = float(input("Podaj wartość masy cząstki: "))  # Masa
 pos = np.array(input("Podaj początkową pozycję cząstki (3 wartości oddzielone spacją): ").split()).astype(float)  # Pozycja początkowa
 vel = np.array(input("Podaj początkową prędkość cząstki (3 wartości oddzielone spacją): ").split()).astype(float)  # Prędkość początkowaW
 
-t_span = (0, 30)  # Czas symulacji od 0 do 20 sekund
-t_eval = np.linspace(t_span[0], t_span[1], 1000)  # Punkty czasowe do zapisu
+t_span = (0, 20)  # Czas symulacji od 0 do 20 sekund
+t_eval = np.linspace(t_span[0], t_span[1], 2000)  # Punkty czasowe do zapisu
 
 
 # --- ROZWIĄZANIE RÓWNANIA RUCHU ---
